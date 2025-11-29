@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+
+# We add this in the user config because it's not straight-forward to restart a nix-daemon in a cotainer (it doesn't have systemd).
+mkdir -p ~/.config/nix
+echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
+
+# Install the "hello" package from our nix flake
+nix profile add ./flake-hello#hello

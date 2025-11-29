@@ -1,0 +1,17 @@
+{
+  "name": "Debian Slim with Nix",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "vscode", // Set to `root` to connect as root. https://aka.ms/vscode-remote/containers/non-root.
+
+  "features": {
+    "ghcr.io/devcontainers/features/nix:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": []
+    }
+  }
+}
