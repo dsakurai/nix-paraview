@@ -6,11 +6,4 @@ set -e
 mkdir -p ~/.config/nix
 echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
-# Install the "hello" package from our nix flake
-nix profile add ./flake-hello#HelloFlake
-
-# To build a package in the current directory (exeecute from the flake root):
-# nix build .#SomePackageName
-
-# To run a GUI app:
-nix profile add ./flake-hello#Weston
+( cd paraview && nix profile add . )
