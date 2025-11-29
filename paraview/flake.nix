@@ -11,6 +11,9 @@
         };
       in {
         paraview = pkgs.symlinkJoin {
+        
+          # I could use nixGL, but mesa is probably fine assuming we can use CPU rendering with ParaView https://github.com/nix-community/nixGL
+
           name = "paraview-with-osmesa";
           paths = [ pkgs.paraview ];
           buildInputs = [ pkgs.makeWrapper ];
