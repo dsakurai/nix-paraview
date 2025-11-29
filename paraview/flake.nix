@@ -9,13 +9,21 @@
         pkgs = import nixpkgs {
           system = "x86_64-linux";
         };
+        # Override cmakeFlags here
+        myParaview = pkgs.paraview.overrideAttrs (old: {
+          cmakeFlags = old.cmakeFlags ++ [
+            # Add your custom flags here, for example:
+            (pkgs.lib.cmakeBool "PARAVIEW_USE_MPI" false)
+            (pkgs.lib.cmakeBool "PARAVIEW_ENABLE_WEB" false)
+          ];
+        });
       in {
         paraview = pkgs.symlinkJoin {
         
           # I could use nixGL, but mesa is probably fine assuming we can use CPU rendering with ParaView https://github.com/nix-community/nixGL
 
           name = "paraview-with-osmesa";
-          paths = [ pkgs.paraview ];
+          paths = [ myParaview ];
           buildInputs = [ pkgs.makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/paraview \
