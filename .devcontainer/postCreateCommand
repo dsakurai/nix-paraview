@@ -7,4 +7,7 @@ mkdir -p ~/.config/nix
 echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
 # Install the "hello" package from our nix flake
-nix profile add ./flake-hello#hello
+nix profile add ./flake-hello#HelloFlake
+
+echo "Execute 'hello-flake' to run the hello-world program that was installed!"
+hello-flake

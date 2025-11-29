@@ -4,6 +4,8 @@
     "dockerfile": "Dockerfile"
   },
   "remoteUser": "vscode", // Set to `root` to connect as root. https://aka.ms/vscode-remote/containers/non-root.
+  
+  "postCreateCommand": ".devcontainer/postCreateCommand",
 
   "features": {
     "ghcr.io/devcontainers/features/nix:1": {}
