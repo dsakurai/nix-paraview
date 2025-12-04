@@ -33,6 +33,27 @@
           '';
         };
 
+        # Add ospray to buildInputs for VTK
+        myVtk = pkgs.vtk-full.overrideAttrs (old: {
+          buildInputs = (old.buildInputs or []) ++ [ ospray ];
+          cmakeFlags = (old.cmakeFlags or []) ++ [
+            "-DVTK_MODULE_ENABLE_VTK_RENDERINGRAYTRACING=WANT"
+            "-Dospray_DIR=${ospray}/lib/cmake/ospray"
+            
+            # Fails with OSPRay
+            "-DVTK_MODULE_ENABLE_VTK_IOIOSS=WANT" # Suspicious..
+            "-DVTK_MODULE_ENABLE_VTK_ioss=WANT"
+            "-DVTK_IOSSMODULE_ENABLE=WANT"
+          ];
+          # Limit parallel jobs to 1
+          # enableParallelBuilding = false; # Save RAM
+          # NIX_BUILD_CORES = 1; # Save RAM
+        });
+
+        myParaview = pkgs.paraview.override {
+          vtk-full = myVtk;
+        };
+
         myParaviewWithFlags = myParaview.overrideAttrs (old: {
           cmakeFlags = old.cmakeFlags ++ [
             "-Dospray_DIR=${ospray}/lib/cmake/ospray"
@@ -42,7 +63,6 @@
             # (pkgs.lib.cmakeBool "PARAVIEW_USE_EXTERNAL_VTK" false)
           ];
         });
-
       in {
         paraview = pkgs.symlinkJoin {
         
