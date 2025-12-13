@@ -6,4 +6,11 @@ set -e
 mkdir -p ~/.config/nix
 echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 
-( cd paraview && nix profile add . )
+
+# curl -LsSf https://astral.sh/uv/install.sh | sh
+# 
+# echo 'export PATH="/home/vscode/.local/bin:$PATH"' >> ~/.bashrc
+# # Install Python using uv
+# /home/vscode/.local/bin/uv python install 3.12
+
+(cd paraview && ./vcpkg-install.sh)
