@@ -288,6 +288,8 @@ paraview.cmakeFlags
 paraview.configurePhase
 ```
 
+The configure phase of nix for CMake is stored in, e.g., `/nix/store/2lrbixyw95bjg0x1aav648r0h0zsj2jl-cmake-4.1.1/nix-support/setup-hook`
+
 ##
 
 Enter the directory `paraview-dev` and execute `nix-shell` from shell.
