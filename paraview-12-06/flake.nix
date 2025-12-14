@@ -69,6 +69,8 @@
         "-GNinja"
       ];
       
+      # Don't build nor install automatically.
+      # Not sure if these really have an effect.
       dontBuild   = true;
       dontInstall = true;
 
