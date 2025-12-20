@@ -31,6 +31,7 @@
         pkgs.ninja
         pkgs.qt6Packages.wrapQtAppsHook
         pkgs.makeWrapper
+        pkgs.xorg.xeyes # Useful for debugging GUI
       ];
       
       propagatedBuildInputs = [
@@ -115,7 +116,7 @@
         echo ""
         echo "CMake flags: $cmakeFlags"
         
-        echo "Run ParaView-v6.0.1/build/bin/paraview with `nix develop` (without -i)"
+        echo "Run ParaView-v6.0.1/build/bin/paraview with nix develop (without -i)"
       '';
     });
   };
