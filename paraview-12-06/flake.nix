@@ -30,7 +30,7 @@
         pkgs.cmake
         pkgs.ninja
         pkgs.qt6Packages.wrapQtAppsHook
-        # vtk-full.vtkPackages.python3Packages.pythonRecompileBytecodeHook
+        pkgs.makeWrapper
       ];
       
       propagatedBuildInputs = [
@@ -38,7 +38,15 @@
         pkgs.qt6Packages.qt5compat
         pkgs.protobuf
         pkgs.nlohmann_json
-        # vtk-full
+        # pkgs.vtk-full
+        pkgs.mesa
+        pkgs.libglvnd
+        pkgs.xorg.libxcb
+        pkgs.xorg.xcbutilcursor
+        pkgs.xorg.xcbutilimage
+        pkgs.xorg.xcbutilkeysyms
+        pkgs.xorg.xcbutilrenderutil
+        pkgs.xorg.xcbutilwm
       ];
       
       cmakeFlags = [
@@ -72,32 +80,42 @@
       # Don't build nor install automatically.
       # Not sure if these really have an effect.
       dontBuild   = true;
-      dontInstall = true;
+      dontInstall = false;
 
       shellHook = ''
-      
-        # Source the CMake setup hook to get configurePhase
-        # source ${pkgs.cmake}/nix-support/setup-hook
+        # Set up Qt and OpenGL environment
+        export QT_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}"
+        export QT_QPA_PLATFORM_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}/platforms"
+        export QT_QPA_PLATFORM=offscreen
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ 
+          pkgs.mesa 
+          pkgs.libglvnd 
+          pkgs.xorg.xcbutilcursor
+          pkgs.xorg.libxcb
+          pkgs.qt6Packages.qtbase
+        ]}:$LD_LIBRARY_PATH"
+        export __GLX_VENDOR_LIBRARY_NAME=mesa
+        export GALLIUM_DRIVER=llvmpipe
+        export LIBGL_ALWAYS_SOFTWARE=1
+        export MESA_GL_VERSION_OVERRIDE=3.3
+        export FONTCONFIG_FILE="${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
+        export LC_ALL=C.UTF-8
         
-        echo "${pkgs.cmake}"
-
-
-
         echo "ParaView development shell"
         echo "Source is available at: $src"
         echo ""
         echo "To build manually:"
-        echo "  unpackPhase    # Extracts source to current directory"
-        echo "  patchPhase     # Applies patches"
-        echo "  cd paraview-*  # Enter source directory"
-        echo "  configurePhase # Runs cmake with Nix's flags"
-        echo "  buildPhase     # Runs make/ninja"
+        echo "  unpackPhase"
+        echo "  cd ParaView-v6.0.1"
+        echo "  patchPhase"
+        echo "  mkdir -p build && cd build"
+        echo "  cmake \$cmakeFlags .."
+        echo "  ninja"
+        echo ""
         echo ""
         echo "CMake flags: $cmakeFlags"
-
-        # unpackPhase
-        mkdir -p ParaView-v6.0.1/build
-        cd ParaView-v6.0.1/build
+        
+        echo "Run ParaView-v6.0.1/build/bin/paraview with `nix develop` (without -i)"
       '';
     });
   };
