@@ -7,6 +7,30 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs { inherit system; };
     paraview = pkgs.paraview;
+    
+    # Minimal ospray derivation (replace version/hash as needed)
+    ospray = pkgs.stdenv.mkDerivation {
+      pname = "ospray";
+      version = "3.2.0";
+      src = pkgs.fetchurl {
+        url = "https://github.com/ospray/OSPRay/releases/download/v3.2.0/ospray-3.2.0.x86_64.linux.tar.gz";
+        sha256 = "sha256-2GcOabR2LiTyqoNimviX6PM+occk4X5hOULAzMHHI74=";
+      };
+      nativeBuildInputs = [ pkgs.autoPatchelfHook pkgs.pkg-config  pkgs.curl];
+      buildInputs = [ pkgs.tbb pkgs.embree pkgs.curl ];
+      dontAutoPatchelf = true;
+      installPhase = ''
+        mkdir -p $out
+        tar -xzf $src --strip-components=1 -C $out
+        # Only patch the libraries you actually need (core OSPRay)
+        for f in $out/lib/libospray.so* $out/lib/cmake/ospray/*; do
+          if [ -f "$f" ]; then
+            patchelf --set-rpath ${pkgs.lib.makeLibraryPath [ pkgs.tbb pkgs.embree ]} "$f" || true
+          fi
+        done
+      '';
+    };
+
   in {
     devShells.${system}.default = paraview.overrideAttrs (oldAttrs: {
       
@@ -41,6 +65,7 @@
         pkgs.nlohmann_json
         # pkgs.vtk-full
         pkgs.mesa
+        ospray
         pkgs.libglvnd
         pkgs.xorg.libxcb
         pkgs.xorg.xcbutilcursor
@@ -51,6 +76,8 @@
       ];
       
       cmakeFlags = [
+        (pkgs.lib.cmakeBool "PARAVIEW_ENABLE_RAYTRACING" true)
+
         (pkgs.lib.cmakeBool "PARAVIEW_VERSIONED_INSTALL" false)
         (pkgs.lib.cmakeBool "PARAVIEW_BUILD_WITH_EXTERNAL" false)
         (pkgs.lib.cmakeBool "PARAVIEW_USE_EXTERNAL_VTK" false)
@@ -76,6 +103,7 @@
         (pkgs.lib.cmakeFeature "CMAKE_INSTALL_INCLUDEDIR" "include")
         (pkgs.lib.cmakeFeature "CMAKE_INSTALL_DOCDIR" "share/paraview/doc")
         "-GNinja"
+        "-Dospray_DIR=${ospray}/lib/cmake/ospray"
       ];
       
       # Don't build nor install automatically.
