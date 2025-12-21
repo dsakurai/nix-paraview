@@ -3,7 +3,7 @@ FROM debian:stable-slim
 # Install any additional dependencies if needed
 # Purely necessary for VSCode
 RUN apt update && \
-    apt install -y sudo ssh git && \
+    apt install -y sudo ssh git curl zip unzip tar && \
     # Clean up apt cache when done
     rm -rf /var/lib/apt/lists/*
 

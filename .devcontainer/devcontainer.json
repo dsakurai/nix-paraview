@@ -4,16 +4,24 @@
     "dockerfile": "Dockerfile"
   },
   "remoteUser": "vscode", // Set to `root` to connect as root. https://aka.ms/vscode-remote/containers/non-root.
-  
+
   "postCreateCommand": ".devcontainer/postCreateCommand",
 
   "features": {
-    "ghcr.io/devcontainers/features/nix:1": {}
-  },
-  "customizations": {
-    "vscode": {
-      "settings": {},
-      "extensions": []
+    "ghcr.io/devcontainers/features/nix:1": {
+      // "multiUser": false
     }
+  },
+
+  // Important part for WSLg
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=/mnt/wslg,target=/mnt/wslg,type=bind"
+  ],
+
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
+    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}"
   }
 }
