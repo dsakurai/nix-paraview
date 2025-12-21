@@ -12,5 +12,3 @@ echo "experimental-features = nix-command flakes" > ~/.config/nix/nix.conf
 # echo 'export PATH="/home/vscode/.local/bin:$PATH"' >> ~/.bashrc
 # # Install Python using uv
 # /home/vscode/.local/bin/uv python install 3.12
-
-(cd paraview && ./vcpkg-install.sh)
