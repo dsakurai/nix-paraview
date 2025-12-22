@@ -313,3 +313,33 @@ nix develop
 to recover the shell environment.
 
 Remember to execute `nix develop` EVERYTIME you change flake.nix.
+
+
+## 
+
+You can also do
+
+```
+vscode@eebfb8f2d2c5:/workspaces/devcontainer-nix-official$ nix eval --impure --expr '
+> let
+>   flake = builtins.getFlake "github:NixOS/nixpkgs/c8996fc1e6ef04c4049136c0363a8a4243f37c32";
+>   pkgs = import flake { system = "x86_64-linux"; };
+> in
+>   map (x: x.name) pkgs.vtk-full.propagatedBuildInputs
+> '
+[45.1 MiB DL] unpacking 'github:NixOS/nixpkgs/c8996fc1e6ef04c4049136c0363a8a4243f37c32' into the Git cac
+[ "eigen-3.4.0-unstable-2022-05-19" "boost-1.87.0" "verdict-1.4.4" "double-conversion-3.3.1" "freetype-2.13.3" "lz4-1.10.0" "xz-5.8.1" "zlib-1.3.1" "expat-2.7.2" "exprtk-0.0.3" "pugixml-1.15" "jsoncpp-1.9.6" "libxml2-2.14.6" "utf8cpp-4.0.6" "nlohmann_json-3.12.0" "libjpeg-turbo-3.1.2" "libpng-apng-1.6.50" "libtiff-4.7.1" "proj-9.7.0" "sqlite-3.50.4" "libogg-1.3.6" "libharu-2.4.5" "libtheora-1.2.0" "cli11-2.5.0" "openslide-4.0.0" "onetbb-2022.2.0" "hdf5-mpi-1.14.6" "cgns-4.5.0" "adios2-2.10.2" "netcdf-mpi-4.9.3" "catalyst-2.0.0" "viskores-1.0.0" "libx11-1.8.12" "gl2ps-1.4.2" "python3.13-vtk-9.5.2" ]
+```
+
+```
+vscode@eebfb8f2d2c5:/workspaces/devcontainer-nix-official$ nix eval --impure --expr '
+> let
+>   flake = builtins.getFlake "github:NixOS/nixpkgs/c8996fc1e6ef04c4049136c0363a8a4243f37c32";
+>   pkgs = import flake { system = "x86_64-linux"; };
+>   vtk = pkgs.vtk-full;
+>   vtkPython = builtins.head (builtins.filter (x: (builtins.match "python.*-vtk.*" x.name) != null) vtk.propagatedBuildInputs);
+> in
+>   map (x: x.name) vtkPython.propagatedBuildInputs
+> '
+[ "python3.13-numpy-2.3.2" "python3.13-wslink-2.4.0" "python3.13-matplotlib-3.10.5" "python3.13-mpi4py-4.1.0" "python3-3.13.7" ]
+```

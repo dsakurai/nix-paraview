@@ -73,6 +73,13 @@
         pkgs.xorg.xcbutilkeysyms
         pkgs.xorg.xcbutilrenderutil
         pkgs.xorg.xcbutilwm
+        
+        # Python
+        pkgs.python311
+        pkgs.python311Packages.numpy
+        # pkgs.python311Packages.wslink
+        # pkgs.python311Packages.matplotlib # Conflicts with tkinter 9
+        # pkgs.python311Packages.mpi4py
       ];
       
       cmakeFlags = [
@@ -83,7 +90,7 @@
         (pkgs.lib.cmakeBool "PARAVIEW_USE_EXTERNAL_VTK" false)
         (pkgs.lib.cmakeBool "PARAVIEW_USE_QT" true)
         (pkgs.lib.cmakeBool "PARAVIEW_USE_MPI" false)
-        (pkgs.lib.cmakeBool "PARAVIEW_USE_PYTHON" false)
+        (pkgs.lib.cmakeBool "PARAVIEW_USE_PYTHON" true)
         (pkgs.lib.cmakeBool "PARAVIEW_ENABLE_WEB" false)
         (pkgs.lib.cmakeBool "PARAVIEW_ENABLE_CATALYST" false)
         (pkgs.lib.cmakeBool "PARAVIEW_ENABLE_VISITBRIDGE" false)
