@@ -56,6 +56,9 @@
         pkgs.qt6Packages.wrapQtAppsHook
         pkgs.makeWrapper
         pkgs.xorg.xeyes # Useful for debugging GUI
+        
+        # For nix develop shell
+        pkgs.uv
       ];
       
       propagatedBuildInputs = [
@@ -152,6 +155,15 @@
         echo "CMake flags: $cmakeFlags"
         
         echo "Run ParaView-v6.0.1/build/bin/paraview with nix develop (without -i)"
+        
+        # Set up uv
+        export UV_PYTHON="${pkgs.python311}/bin/python3"
+        
+        echo "Even with `uv venv`, this will create a venv with numpy. It is available in PYTHONPATH since nix exposes packages that way." 
+
+        echo "To use Python venv, you can do"
+        echo "uv init myproject && cd myproject && source .venv/bin/activate"
+        echo "paraview --venv .venv"
       '';
     });
   };
