@@ -1,5 +1,7 @@
 # Nix GUI Programs Demo
 
+This repository is hosted at https://github.com/dsakurai/nix-paraview.
+
 This demo shows how to use Nix to build, install, and run GUI programs in a dev container.
 
 ## Prerequisites
