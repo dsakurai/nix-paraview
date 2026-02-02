@@ -12,11 +12,16 @@
       // "multiUser": false
     }
   },
+  
+  "workspaceMount": "",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-  // Important part for WSLg
-  "mounts": [
-    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
-    "source=/mnt/wslg,target=/mnt/wslg,type=bind"
+  "runArgs": [
+    "-v", "${localWorkspaceFolder}:/workspaces/${localWorkspaceFolderBasename}:Z",
+
+    // Important part for WSLg with SELinux support
+    "-v", "/tmp/.X11-unix:/tmp/.X11-unix:Z", 
+    "-v", "/mnt/wslg:/mnt/wslg:Z"
   ],
 
   "containerEnv": {
