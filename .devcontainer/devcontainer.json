@@ -18,6 +18,8 @@
 
   "runArgs": [
     "-v", "${localWorkspaceFolder}:/workspaces/${localWorkspaceFolderBasename}:Z",
+    // Allow X11 connections on SELinux-enabled hosts
+    "--security-opt", "label=type:container_runtime_t",
 
     // Important part for WSLg with SELinux support
     "-v", "/tmp/.X11-unix:/tmp/.X11-unix:Z", 
