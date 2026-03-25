@@ -71,15 +71,15 @@
         # pkgs.protobuf
         pkgs.nlohmann_json
         # pkgs.vtk-full
-        pkgs.mesa
+        # pkgs.mesa
         ospray
-        pkgs.libglvnd
-        pkgs.xorg.libxcb
-        pkgs.xorg.xcbutilcursor
-        pkgs.xorg.xcbutilimage
-        pkgs.xorg.xcbutilkeysyms
-        pkgs.xorg.xcbutilrenderutil
-        pkgs.xorg.xcbutilwm
+        # pkgs.libglvnd
+        # pkgs.xorg.libxcb
+        # pkgs.xorg.xcbutilcursor
+        # pkgs.xorg.xcbutilimage
+        # pkgs.xorg.xcbutilkeysyms
+        # pkgs.xorg.xcbutilrenderutil
+        # pkgs.xorg.xcbutilwm
         
         # Python
         
