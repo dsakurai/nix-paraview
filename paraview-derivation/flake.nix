@@ -52,7 +52,8 @@
         echo "Running custom postPatch modifications..."
       '';
 
-      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
+      # PYTHON
+      nativeBuildInputs = (pkgs.lib.filter (p: p != pkgs.vtk-full.vtkPackages.python3Packages.pythonRecompileBytecodeHook) oldAttrs.nativeBuildInputs) ++ [
         # pkgs.cmake
         # pkgs.ninja
         # pkgs.qt6Packages.wrapQtAppsHook
@@ -164,50 +165,37 @@
       # dontBuild   = true;
       # dontInstall = false;
 
-      # shellHook = ''
-      #   # Set up Qt and OpenGL environment
-      #   export QT_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}"
-      #   export QT_QPA_PLATFORM_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}/platforms"
-      #   export QT_QPA_PLATFORM=offscreen
-      #   export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ 
-      #     pkgs.mesa 
-      #     pkgs.libglvnd 
-      #     pkgs.xorg.xcbutilcursor
-      #     pkgs.xorg.libxcb
-      #     pkgs.qt6Packages.qtbase
-      #   ]}:$LD_LIBRARY_PATH"
-      #   export __GLX_VENDOR_LIBRARY_NAME=mesa
-      #   export GALLIUM_DRIVER=llvmpipe
-      #   export LIBGL_ALWAYS_SOFTWARE=1
-      #   export MESA_GL_VERSION_OVERRIDE=3.3
-      #   export FONTCONFIG_FILE="${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
-      #   export LC_ALL=C.UTF-8
-      #   
-      #   echo "ParaView development shell"
-      #   echo "Source is available at: $src"
-      #   echo ""
-      #   echo "To build manually:"
-      #   echo "  unpackPhase"
-      #   echo "  cd ParaView-v6.0.1"
-      #   echo "  patchPhase"
-      #   echo "  mkdir -p build && cd build"
-      #   echo "  cmake \$cmakeFlags .."
-      #   echo "  ninja"
-      #   echo ""
-      #   echo ""
-      #   echo "CMake flags: $cmakeFlags"
-      #   
-      #   echo "Run ParaView-v6.0.1/build/bin/paraview with nix develop (without -i)"
-      #   
-      #   # Set up uv
-      #   export UV_PYTHON="${pkgs.python311}/bin/python3"
-      #   
-      #   echo "Even with `uv venv`, this will create a venv with numpy. It is available in PYTHONPATH since nix exposes packages that way." 
+      shellHook = ''
+        # Set up Qt and OpenGL environment
+        export QT_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}"
+        export QT_QPA_PLATFORM_PLUGIN_PATH="${pkgs.qt6Packages.qtbase}/${pkgs.qt6Packages.qtbase.qtPluginPrefix}/platforms"
+        export QT_QPA_PLATFORM=offscreen
+        export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath [ 
+          pkgs.mesa 
+          pkgs.libglvnd 
+          pkgs.xorg.xcbutilcursor
+          pkgs.xorg.libxcb
+          pkgs.qt6Packages.qtbase
+        ]}:$LD_LIBRARY_PATH"
+        export __GLX_VENDOR_LIBRARY_NAME=mesa
+        export GALLIUM_DRIVER=llvmpipe
+        export LIBGL_ALWAYS_SOFTWARE=1
+        export MESA_GL_VERSION_OVERRIDE=3.3
+        export FONTCONFIG_FILE="${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
+        export LC_ALL=C.UTF-8
+        
+        echo "Run with
+        echo "./result/bin/paraview"
+        
+        # Set up uv
+        # export UV_PYTHON="${pkgs.python311}/bin/python3"
+        
+        # echo "Even with `uv venv`, this will create a venv with numpy. It is available in PYTHONPATH since nix exposes packages that way." 
 
-      #   echo "To use Python venv, you can do"
-      #   echo "uv init myproject && cd myproject && source .venv/bin/activate"
-      #   echo "paraview --venv .venv"
-      # '';
+        # echo "To use Python venv, you can do"
+        # echo "uv init myproject && cd myproject && source .venv/bin/activate"
+        # echo "paraview --venv .venv"
+      '';
     });
   };
 }
