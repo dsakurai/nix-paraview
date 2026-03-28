@@ -184,7 +184,7 @@
         export FONTCONFIG_FILE="${pkgs.fontconfig.out}/etc/fonts/fonts.conf"
         export LC_ALL=C.UTF-8
         
-        echo "Run with
+        echo "Run with"
         echo "./result/bin/paraview"
         
         # Set up uv

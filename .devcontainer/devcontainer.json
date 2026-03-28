@@ -9,26 +9,10 @@
 
   "features": {
     "ghcr.io/devcontainers/features/nix:1": {
-      "multiUser": false
+      // "multiUser": false
+    },
+    "ghcr.io/devcontainers/features/git:1": { // Only needed when the Devcontainer does not provide a decent git binary.
+        // "version": "os-provided"  // The default. When the VSCode is running on Windows and DevContainer on WSL, seems the Windows' git is passed.The understanding is important for managing credentials.  (If the git feature is not used, the credential seems to be from WSL.) 
     }
-  },
-  
-  "workspaceMount": "",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
-  "runArgs": [
-    "-v", "${localWorkspaceFolder}:/workspaces/${localWorkspaceFolderBasename}:Z",
-    // Allow X11 connections on SELinux-enabled hosts
-    "--security-opt", "label=type:container_runtime_t",
-
-    // Important part for WSLg with SELinux support
-    "-v", "/tmp/.X11-unix:/tmp/.X11-unix:Z", 
-    "-v", "/mnt/wslg:/mnt/wslg:Z"
-  ],
-
-  "containerEnv": {
-    "DISPLAY": "${localEnv:DISPLAY}",
-    "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
-    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}"
   }
 }

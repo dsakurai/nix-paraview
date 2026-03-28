@@ -1,16 +1,21 @@
 FROM debian:stable-slim
 
-# Install any additional dependencies if needed
-# Purely necessary for VSCode
-RUN apt update && \
-    apt install -y sudo ssh git curl zip unzip tar && \
-    # Clean up apt cache when done
-    rm -rf /var/lib/apt/lists/*
+ARG USERNAME=vscode
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN useradd -m -c "" -s /bin/bash vscode && \
-    usermod -aG sudo vscode && \
-    echo "vscode ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/nopasswd
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales sudo ca-certificates \
+    # ssh is needed by the git feature of DevContainer
+    ssh-client \
+    && rm -rf /var/lib/apt/lists/* \
+    # Set locale, since it is often required by programs 
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen \
+    && useradd -m -U ${USERNAME} \
+    # Password-less sudo
+    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/${USERNAME} && chmod 0440 /etc/sudoers.d/${USERNAME}
 
-USER vscode
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     \
+#     && rm -rf /var/lib/apt/lists/* \
 
-CMD ["bash"]
+USER ${USERNAME}
